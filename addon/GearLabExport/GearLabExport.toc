@@ -1,0 +1,7 @@
+## Interface: 16001, 11508, 11509
+## Title: Gear Lab Export
+## Notes: Saves your gear, stats and talents for the Forever Gear Lab site. /reload to write the file, or /gearlab to copy it.
+## Version: 1.1
+## SavedVariables: GearLabExportDB
+
+GearLabExport.lua

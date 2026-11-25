@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forever Gear Lab</title>
+<meta name="description" content="Find real auction house upgrades for your WoW Forever character. A fan-made tool; your files stay in your browser.">
+<style>
+@font-face{font-family:"Marcellus";src:url("fonts/marcellus-latin.woff2") format("woff2");font-display:swap}
+:root{
+  --night:#07090f;--plate:#0e111a;--plate-2:#141826;--inset:#090b12;
+  --edge:#4d3d1c;--edge-hi:#a58436;--rule:#262b3a;
+  --gold:#ffd100;--gold-soft:#e7c873;--tan:#cdbd97;--ink:#f3ecdb;--dim:#9c917a;
+  --green:#1eff00;--ok:#9bd98a;--red:#ff6b5e;
+  --q0:#9d9d9d;--q1:#ffffff;--q2:#1eff00;--q3:#4aa3ff;--q4:#c07cff;--q5:#ff8000;
+  --coin-g:#ffd100;--coin-s:#c9cdd6;--coin-c:#d98a4e;
+  --btn:#6d1010;--btn-hi:#8f1717;--btn-down:#4f0b0b;
+  --display:"Marcellus","Palatino Linotype","Book Antiqua",Georgia,serif;
+  --body:"Segoe UI",Tahoma,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--night);color-scheme:dark;scrollbar-color:var(--edge) var(--night)}
+body{margin:0;background:var(--night);color:var(--ink);font:15px/1.5 var(--body);caret-color:var(--gold)}
+::selection{background:#6b5520;color:#fff}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:2px}
+a{color:var(--gold-soft);text-underline-offset:3px}
+main{max-width:1080px;margin:0 auto;padding:0 18px 90px}
+.top{border-bottom:1px solid var(--edge);background:var(--plate)}
+.top div{max-width:1080px;margin:0 auto;padding:18px 18px 16px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+h1{font:400 30px/1.1 var(--display);color:var(--gold);margin:0;letter-spacing:.01em;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 2px 0 #000}
+.top p{margin:0;color:var(--tan)}
+h2{font:400 22px/1.2 var(--display);color:var(--gold);margin:44px 0 10px;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 2px 0 #000;text-wrap:balance}
+h3,h2.colhead{font:400 17px/1.2 var(--display);color:var(--gold);margin:0 0 10px;text-shadow:none}
+p{margin:6px 0 10px}
+.dim,.gray{color:var(--dim)}.tan{color:var(--tan)}.small{font-size:13px}.r{text-align:right}
+.plate{background:var(--plate);background-clip:padding-box;border:6px solid var(--edge);border-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect x='.5' y='.5' width='35' height='35' fill='none' stroke='%23b8963f'/%3E%3Crect x='2.5' y='2.5' width='31' height='31' fill='none' stroke='%23120d05' stroke-width='3'/%3E%3Crect x='4.5' y='4.5' width='27' height='27' fill='none' stroke='%23705a22'/%3E%3Cpath d='M0 0h8v8H0zM28 0h8v8h-8zM0 28h8v8H0zM28 28h8v8h-8z' fill='%23b8963f'/%3E%3Cpath d='M2 2h4v4H2zM30 2h4v4h-4zM2 30h4v4H2zM30 30h4v4h-4z' fill='%233a2c10'/%3E%3Cpath d='M3 3h2v2H3zM31 3h2v2h-2zM3 31h2v2H3zM31 31h2v2h-2z' fill='%23e7c873'/%3E%3C/svg%3E") 12 / 6px stretch}
+.setup{margin-top:22px;display:grid;grid-template-columns:1.15fr 1fr .9fr}
+.setup>.col{padding:18px 20px 20px;min-width:0}
+.setup>.col+.col{border-left:1px solid var(--edge)}
+.status{font-size:13.5px;color:var(--tan);margin:8px 0;min-height:1.2em}
+.status.ok{color:var(--ok)}.status.err{color:var(--red)}
+.hint{font-size:13px;color:var(--dim);margin:8px 0 0}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:inherit;cursor:pointer}
+.btn{font:400 15px/1 var(--display);letter-spacing:.02em;color:var(--gold-soft);background:var(--plate-2);border:1px solid var(--edge-hi);border-radius:4px;padding:9px 14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 4px rgba(0,0,0,.5);transition:background .15s,transform .08s}
+.btn:hover{background:#1c2133;color:var(--gold)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--btn);color:var(--gold);border-color:var(--edge-hi);text-shadow:0 1px 0 #000}
+.btn.primary:hover{background:var(--btn-hi)}
+.btn.primary:active{background:var(--btn-down)}
+.btn.big{font-size:18px;padding:13px 18px;width:100%;margin-top:14px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.linkbtn{background:none;border:none;color:var(--gold-soft);padding:0;text-decoration:underline;text-underline-offset:3px}
+label.field{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:9px 0;color:var(--tan)}
+label.field:has(select){flex-direction:column;align-items:stretch;gap:4px}
+label.field select{width:100%}
+label.check{display:flex;gap:9px;align-items:flex-start;margin:8px 0;color:var(--tan);font-size:14px}
+input[type=checkbox]{accent-color:#b8922f;margin-top:3px}
+select,input[type=number],textarea{font:inherit;color:var(--ink);background:var(--inset);border:1px solid var(--rule);border-radius:4px;padding:7px 9px;box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
+select{max-width:100%;min-width:0}
+select:hover,input[type=number]:hover,textarea:hover{border-color:var(--edge)}
+input[type=number]{width:96px;text-align:right;font-variant-numeric:tabular-nums}
+textarea{width:100%;min-height:84px;resize:vertical;font:12px/1.4 ui-monospace,Consolas,monospace}
+input[type=file]{font-size:13px;color:var(--tan);max-width:100%}
+details{margin-top:10px}
+summary{cursor:pointer;color:var(--gold-soft);font-size:13.5px}
+details[open]>summary{margin-bottom:8px}
+ol.steps{padding-left:20px;margin:6px 0;color:var(--tan);font-size:13.5px}
+ol.steps li{margin:4px 0}
+.path{display:block;font:12.5px/1.5 ui-monospace,Consolas,monospace;color:var(--ink);background:var(--inset);border:1px solid var(--rule);border-radius:4px;padding:7px 9px;margin:6px 0;word-break:break-all}
+kbd{font:12.5px ui-monospace,Consolas,monospace;background:var(--inset);border:1px solid var(--rule);border-radius:3px;padding:1px 5px;color:var(--ink)}
+.drop{border:1px dashed var(--edge);border-radius:4px;padding:10px;color:var(--dim);font-size:13px;margin-top:8px}
+.over .drop{border-color:var(--gold);color:var(--gold)}
+.castbar{position:relative;height:26px;margin:18px 0 0;background:var(--inset);border:1px solid var(--edge-hi);border-radius:4px;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.7)}
+.castbar i{position:absolute;inset:0;background:#b8861b;transform-origin:left center;transform:scaleX(0);transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.castbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;text-shadow:0 1px 2px #000}
+.verdict{margin:22px 0 0;padding:18px 22px;font-size:18px;line-height:1.5;color:var(--ink)}
+.verdict b{font-weight:600}
+.up{color:var(--green)}
+.money{white-space:nowrap;font-variant-numeric:tabular-nums}
+.money i{display:inline-block;width:.72em;height:.72em;border-radius:50%;margin:0 .32em 0 .14em;vertical-align:-.02em;box-shadow:inset 0 -1px 0 rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.5),0 0 0 1px rgba(0,0,0,.6)}
+.money .g{background:var(--coin-g)}.money .s{background:var(--coin-s)}.money .c{background:var(--coin-c)}
+.sheet{margin-top:16px;padding:18px 22px 20px}
+.sheet .who{font:400 22px/1.2 var(--display)}
+.sheet .who small{font:15px var(--body);color:var(--tan);margin-left:8px}
+.statlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2px 28px;margin:12px 0 0}
+.statlist div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--rule);padding:4px 0}
+.statlist dt{color:var(--tan)}.statlist dd{margin:0;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+.stack{display:flex;height:14px;border-radius:3px;overflow:hidden;margin:8px 0 6px;gap:2px;background:var(--inset);border:1px solid #000}
+.stack i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;color:var(--tan);font-size:13px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.s0{background:#d6a02a}.s1{background:#3f8fe0}.s2{background:#48b06a}.s3{background:#c2553f}.s4{background:#9a78d8}.s5{background:#8f9aa8}
+.notes{margin:14px 0 0;padding:12px 22px 12px 38px;color:var(--tan);font-size:13.5px}
+.notes li{margin:3px 0}
+.slots{margin:0;padding:0;list-style:none}
+.slot{display:grid;grid-template-columns:96px minmax(0,1fr) 108px 132px;gap:6px 16px;align-items:start;padding:12px 18px;border-bottom:1px solid var(--rule)}
+.slot:last-child{border-bottom:none}
+.slot .lab{font:400 16px/1.3 var(--display);color:var(--tan)}
+.slot .do{display:block;font:12px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;margin-top:5px}
+.slot.buy .do{color:var(--gold)}.slot.keep .do{color:var(--dim)}
+.slot.keep .name{opacity:.82}
+.name{font-weight:600}
+.q0{color:var(--q0)}.q1{color:var(--q1)}.q2{color:var(--q2)}.q3{color:var(--q3)}.q4{color:var(--q4)}.q5{color:var(--q5)}
+.tip{color:var(--ink);font-size:13.5px}
+.tip .eq{color:var(--green)}
+.tip .gray{color:var(--dim)}
+.flag{color:#ffb74a;font-size:13px}
+.price{text-align:right}
+.gain{text-align:right;font-variant-numeric:tabular-nums}
+.gain .up{font-weight:600;font-size:16px}
+.gain .bar{display:block;height:5px;margin:6px 0 0 auto;width:100%;background:var(--inset);border-radius:2px;overflow:hidden}
+.gain .bar i{display:block;height:100%;background:var(--green);opacity:.75;margin-left:auto}
+.ledger{width:100%;border-collapse:collapse;font-size:14px}
+.ledger th{font:400 13px var(--body);color:var(--dim);text-align:left;padding:9px 18px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.ledger th.r{text-align:right}
+.ledger td{padding:9px 18px;border-bottom:1px solid var(--rule);vertical-align:top}
+.ledger tr:last-child td{border-bottom:none}
+.ledger td.r{white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.tips{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+.tt{max-width:360px;background:rgba(7,11,30,.94);border:1px solid #9aa3b5;border-radius:6px;padding:8px 11px 9px;font-size:13.5px;line-height:1.45;color:#fff}
+.tt .name{display:block;font-size:15px}
+.tt .lr{display:flex;justify-content:space-between;gap:20px}
+.tt .eq{color:var(--green)}
+.tt .no{color:var(--red)}
+.opt .tt{margin-top:6px;max-width:none}
+.tipcard{padding:14px 16px 6px}
+.tipcard h3{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tipcard h3 small{font:12px var(--body);color:var(--dim);letter-spacing:.04em}
+.opt{padding:9px 0;border-top:1px solid var(--rule)}
+.opt .line{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.opt .line .up{font-variant-numeric:tabular-nums}
+.weights{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:0 28px;padding:10px 22px 14px}
+.weights div{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);padding:5px 0}
+.weights span:last-child{color:var(--green);font-variant-numeric:tabular-nums}
+.after{margin-top:12px}
+footer{margin-top:54px;padding-top:16px;border-top:1px solid var(--edge);color:var(--dim);font-size:13px;max-width:78ch}
+#loading{margin-top:22px;padding:18px 20px;color:var(--tan)}
+@media (prefers-reduced-motion:no-preference){
+  .reveal>*{animation:rise .5s cubic-bezier(.16,1,.3,1) both}
+  .reveal>*:nth-child(2){animation-delay:.05s}.reveal>*:nth-child(3){animation-delay:.1s}.reveal>*:nth-child(4){animation-delay:.15s}
+  .reveal>*:nth-child(5){animation-delay:.2s}.reveal>*:nth-child(n+6){animation-delay:.25s}
+  @keyframes rise{from{opacity:.01;transform:translateY(10px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+}
+@media (max-width:860px){
+  .setup{grid-template-columns:1fr}
+  .setup>.col+.col{border-left:none;border-top:1px solid var(--rule)}
+  .slot{grid-template-columns:78px minmax(0,1fr);padding:12px 14px}
+  .slot .price,.slot .gain{grid-column:2;text-align:left}
+  .gain .bar{display:none}
+  .slot.keep .price,.slot.keep .gain{display:none}
+  h1{font-size:25px}
+  .verdict{font-size:16.5px;padding:15px 16px}
+  .sheet{padding:15px 16px}
+  .ledger th,.ledger td{padding:8px 12px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div>
+  <h1>Forever Gear Lab</h1>
+  <p>What to buy on the auction house, and what to leave alone, for your WoW Forever character.</p>
+</div></header>
+<main>
+  <div id="loading" class="plate">Loading item data…</div>
+  <div id="app" hidden>
+    <section class="plate setup" aria-label="Setup">
+      <div class="col" id="dropzone">
+        <h2 class="colhead">Game folder</h2>
+        <div class="btnrow">
+          <button id="connect" class="btn primary">Find my WoW folder</button>
+          <button id="resync" class="btn" hidden>Sync again</button>
+        </div>
+        <p id="folderStatus" class="status">Not connected yet.</p>
+        <label class="field" id="accountRow" hidden>Account <select id="account"></select></label>
+        <p class="hint">In game, scan the auction house with Auctionator and type <kbd>/reload</kbd> first. WoW only writes its files then.</p>
+        <details>
+          <summary>Where is the folder?</summary>
+          <ol class="steps">
+            <li>In the Battle.net app, open the gear menu next to Play and choose <b>Show in Explorer</b>. That opens the <b>World of Warcraft</b> folder.</li>
+            <li>Pick that folder here. The site finds the rest on its own.</li>
+            <li>If the browser refuses the folder (it does for some protected locations such as Program Files), use "Choose the files myself" and go to:</li>
+          </ol>
+          <span class="path" id="pathText">World of Warcraft\_forever_\WTF\Account\YOUR-ACCOUNT\SavedVariables</span>
+          <button id="copyPath" class="linkbtn small">Copy this path</button>
+        </details>
+        <details id="filesAlt">
+          <summary>Choose the files myself</summary>
+          <input type="file" id="filesInput" accept=".lua" multiple aria-label="Addon files">
+          <div class="drop">Pick <b>Auctionator.lua</b> and <b>GearLabExport.lua</b> from the SavedVariables folder, or drop them anywhere on this panel.</div>
+        </details>
+        <details id="addonBox">
+          <summary>Get the GearLabExport addon</summary>
+          <p id="addonStatus" class="status">It saves your gear, stats and talents so the site can read them.</p>
+          <div class="btnrow">
+            <button id="installAddon" class="btn">Install into my AddOns folder</button>
+            <button id="downloadAddon" class="btn">Download as a zip</button>
+          </div>
+          <p class="hint">After installing, restart WoW (or type <kbd>/reload</kbd>), log in on each character once, then press Sync again.</p>
+        </details>
+      </div>
+      <div class="col">
+        <h2 class="colhead">Character</h2>
+        <label class="field" id="charRow" hidden>Character <select id="charSel"></select></label>
+        <p id="charStatus" class="status">No character loaded yet.</p>
+        <p id="classNote" class="status"></p>
+        <p id="talentList" class="hint"></p>
+        <label class="field" id="realmRow" hidden>Realm <select id="realm"></select></label>
+        <p id="ahStatus" class="status">No auction prices loaded yet.</p>
+        <details>
+          <summary>Paste an export instead</summary>
+          <textarea id="exportText" placeholder="Paste the text from /gearlab or the WowSims Exporter here" spellcheck="false" aria-label="Character export"></textarea>
+          <label class="field" id="sampleRow" hidden>Sample <select id="sampleSel"><option value="">Pick a sample character…</option></select></label>
+          <button id="sampleAh" class="linkbtn small" hidden>Use the sample auction prices</button>
+        </details>
+      </div>
+      <div class="col">
+        <h2 class="colhead">Budget</h2>
+        <label class="field">Gold to spend <input type="number" id="budget" value="10" min="0" step="1"></label>
+        <label class="field" id="styleRow" hidden>Playstyle <select id="style"></select></label>
+        <label class="field">Skip listings older than (days) <input type="number" id="maxAge" value="3" min="0" step="1"></label>
+        <label class="check"><input type="checkbox" id="nextLevel" checked> <span>Include items that need one more level</span></label>
+        <label class="check"><input type="checkbox" id="skipWeapon"> <span>No weapon (I'm getting one from a quest or dungeon)</span></label>
+        <label class="check"><input type="checkbox" id="cloth"> <span>Allow cloth even if I can wear better</span></label>
+        <button id="go" class="btn primary big" disabled>Find upgrades</button>
+        <p id="goStatus" class="status"></p>
+      </div>
+    </section>
+    <div id="progress" class="castbar" hidden role="status"><i id="progressBar"></i><span id="progressText"></span></div>
+    <div id="results" hidden></div>
+    <textarea id="discordOut" hidden aria-label="Text for Discord" style="margin-top:12px;min-height:220px"></textarea>
+    <footer>
+      <p id="trust"><b class="tan">How far to trust this.</b> Each class has a simplified fight simulator: one character against one mob of the same level, with a normal levelling rotation. Spell, talent and item numbers come from the wowsims/forever project's game data; the mob uses Classic assumptions. Nothing here was measured in game, and the server changes items, so read the in-game tooltip before you buy.</p>
+      <details><summary>Classes with a simulator: <span id="classList">loading</span></summary><ul id="classAbout" class="dim" style="padding-left:18px;margin:8px 0"></ul></details>
+      <p>Your files are read in your browser and never uploaded. Item stats come from Wowhead's WoW Forever tooltips. Fan-made; not affiliated with or endorsed by Blizzard Entertainment.</p>
+    </footer>
+  </div>
+</main>
+<script src="js/core.js"></script>
+<script src="js/parse.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/classes/shaman.js"></script>
+<script src="js/classes/warrior.js"></script>
+<script src="js/classes/rogue.js"></script>
+<script src="js/classes/paladin.js"></script>
+<script src="js/classes/hunter.js"></script>
+<script src="js/classes/mage.js"></script>
+<script src="js/classes/warlock.js"></script>
+<script src="js/classes/priest.js"></script>
+<script src="js/classes/druid.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

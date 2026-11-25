@@ -419,6 +419,16 @@ const FULL_STAT = { str: 'Strength', agi: 'Agility', sta: 'Stamina', int: 'Intel
 const SLOT_WORD = { TwoHand: 'Two-Hand', MainHand: 'Main Hand', OneHand: 'One-Hand', OffHand: 'Off Hand', HeldOff: 'Held In Off-hand', Shield: 'Off Hand', Trinket: 'Trinket', Finger: 'Finger' };
 const ARMOR_WORD = { C: 'Cloth', L: 'Leather', M: 'Mail', P: 'Plate' };
 const SCHOOL_WORD = { nat: 'Nature', fir: 'Fire', fro: 'Frost', sha: 'Shadow', arc: 'Arcane', hol: 'Holy' };
+function statLinesFull(st) {
+  const out = [];
+  for (const k of PRIMARY) if (st[k]) out.push('+' + st[k] + ' ' + FULL_STAT[k]);
+  if (st.ap) out.push('+' + st.ap + ' Attack Power');
+  if (st.sp) out.push('+' + st.sp + ' spell damage and healing');
+  for (const k in SCHOOL_WORD) if (st[k]) out.push('+' + st[k] + ' ' + SCHOOL_WORD[k] + ' spell damage');
+  if (st.hit) out.push('+' + st.hit + '% chance to hit');
+  if (st.crit) out.push('+' + st.crit + '% critical strike');
+  return out.map((x) => '<div class="eq">' + esc(x) + '</div>').join('');
+}
 function tooltip(r, c, extra) {
   const st = r.st || {};
   let h = '<div class="tt">' + itemName(r);
@@ -438,7 +448,6 @@ function tooltip(r, c, extra) {
   if (st.crit) h += '<div class="eq">Equip: Improves your chance to get a critical strike by ' + st.crit + '%.</div>';
   if (st.scrit) h += '<div class="eq">Equip: Improves your chance to get a critical strike with spells by ' + st.scrit + '%.</div>';
   if (r.pr) h += '<div class="eq">Chance on hit: Deals about ' + Math.round((r.pr.d || 0) + (r.pr.dot || 0)) + ' extra damage.</div>';
-  else if (r.fx) h += '<div class="eq">Equip: ' + esc(r.fx) + '.</div>';
   if (r.rq) h += '<div' + (r.rq > c.level ? ' class="no"' : '') + '>Requires Level ' + r.rq + '</div>';
   return h + (extra || '') + '</div>';
 }
@@ -503,7 +512,7 @@ function render(res) {
       if (s.skipped) why = s.skipped;
       else if (res.opts.skipWeapon && s.simulated) why = 'Weapons skipped, as you asked.';
       else if (s.cands.length) why = 'Best listing: ' + esc(s.cands[0].n) + ' at ' + money(s.cands[0].price) + '. Not worth it within this budget.';
-      h += '<li class="slot keep"><div class="lab">' + SLOT_LABEL[s.slot] + '<span class="do">Keep</span></div><div class="tip">' + (s.cur ? itemName(s.cur) + '<div>' + esc(statText(s.cur.st, s.cur.d1 ? s.cur : null)) + '</div>' : '<span class="gray">Empty</span>') +
+      h += '<li class="slot keep"><div class="lab">' + SLOT_LABEL[s.slot] + '<span class="do">Keep</span></div><div class="tip">' + (s.cur ? tooltip(s.cur, c) : '<span class="gray">Empty</span>') +
         (why ? '<div class="gray">' + why + '</div>' : '') + '</div><div class="price gray">–</div><div class="gain gray">no change</div></li>';
     }
   }
@@ -517,13 +526,13 @@ function render(res) {
 
   if (res.cons.length) {
     h += '<h2>Cheap buffs</h2><div class="plate scroll"><table class="ledger"><thead><tr><th>Type</th><th>Item</th><th class="r">Price each</th><th class="r">' + gainHead + '</th></tr></thead><tbody>';
-    for (const k of res.cons) h += '<tr><td class="tan">' + k.t[0].toUpperCase() + k.t.slice(1) + '</td><td class="tip"><span class="name q1">' + esc(k.n) + '</span><div class="eq">' + esc(statText(k.st)) + '</div></td><td class="r">' + coins(k.price) + '</td><td class="r up">' + gainText(res, k.gain) + '</td></tr>';
+    for (const k of res.cons) h += '<tr><td class="tan">' + k.t[0].toUpperCase() + k.t.slice(1) + '</td><td class="tip"><span class="name q1">' + esc(k.n) + '</span>' + statLinesFull(k.st) + '</td><td class="r">' + coins(k.price) + '</td><td class="r up">' + gainText(res, k.gain) + '</td></tr>';
     h += '</tbody></table></div>';
   }
 
   if (res.randoms.length) {
     h += '<h2>Random-stat greens to search for</h2><p class="tan" style="max-width:75ch">The scan only knows the cheapest price of any suffix, so search these names at the auction house.</p><div class="plate scroll"><table class="ledger"><thead><tr><th>Slot</th><th>Search for</th><th class="r">Any suffix from</th><th class="r">' + gainHead + '</th></tr></thead><tbody>';
-    for (const x of res.randoms) h += '<tr><td class="tan">' + SLOT_LABEL[x.slot] + '</td><td class="tip"><span class="name q2">' + esc(x.base.n) + ' ' + esc(x.suffix.name) + '</span><div>' + esc(statText(x.suffix.st)) + '</div></td><td class="r">' + coins(x.base.price) + '</td><td class="r up">' + gainText(res, x.suffix.gain) + '</td></tr>';
+    for (const x of res.randoms) h += '<tr><td class="tan">' + SLOT_LABEL[x.slot] + '</td><td class="tip"><span class="name q2">' + esc(x.base.n) + ' ' + esc(x.suffix.name) + '</span>' + statLinesFull(x.suffix.st) + '</td><td class="r">' + coins(x.base.price) + '</td><td class="r up">' + gainText(res, x.suffix.gain) + '</td></tr>';
     h += '</tbody></table></div>';
   }
 
